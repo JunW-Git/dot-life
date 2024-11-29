@@ -14,10 +14,10 @@ WIDTH, HEIGHT = 1000, 1000
 CENTER_X, CENTER_Y = SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
 
 BORDER = pyglet.graphics.Batch()
-UP_BORDER = pyglet.shapes.Rectangle(x=CENTER_X-501, y=CENTER_Y+501, width=1002, height=1, color=(255, 255, 255), batch=BORDER)
+UP_BORDER = pyglet.shapes.Rectangle(x=CENTER_X-501, y=CENTER_Y+501, width=1003, height=1, color=(255, 255, 255), batch=BORDER)
 BOTTOM_BORDER = pyglet.shapes.Rectangle(x=CENTER_X-501, y=CENTER_Y-501, width=1002, height=1, color=(255, 255, 255), batch=BORDER)
 LEFT_BORDER = pyglet.shapes.Rectangle(x=CENTER_X-501, y=CENTER_Y-501, width=1, height=1002, color=(255, 255, 255), batch=BORDER)
-RIGHT_BORDER = pyglet.shapes.Rectangle(x=CENTER_X+501, y=CENTER_Y-501, width=1, height=1002, color=(255, 255, 255), batch=BORDER)
+RIGHT_BORDER = pyglet.shapes.Rectangle(x=CENTER_X+501, y=CENTER_Y-501, width=1, height=1003, color=(255, 255, 255), batch=BORDER)
 
 #--------------------------------------------------------------------------------------------------------------
 

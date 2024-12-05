@@ -2,11 +2,13 @@ import random
 import numpy as np
 import pyglet
 
+#--------------------------------------------------------------------------------------------------------------
+
 display = pyglet.canvas.get_display()
 screen = display.get_screens()[-1] # Get the bigger screen (I use a laptop with a moniter)
 window = pyglet.window.Window(fullscreen=True, caption="Dot Life", vsync=False, screen=screen)
 
-STEP = 0.05 # Time between each increment (allows for slow mo and time elapse)
+STEP = 0.050 # Time between each increment (allows for slow mo and time elapse)
 
 WIDTH, HEIGHT = window.get_size()[0], window.get_size()[1]
 CENTER_X, CENTER_Y = WIDTH / 2, HEIGHT / 2
@@ -18,10 +20,11 @@ BLUE = ((0, 0, 255))
 PURPLE = ((145, 0, 255))
 
 RANGE = 10 # Must be above 2 (excluding 2)
-MAX_SPEED = 3
-POPULATION = 5000
+REPULSION = 2 # Make sure particles are too close
+MAX_SPEED = 2 # Max velocity that is added/removed every increment (not actually max speed it can travel)
+POPULATION = 1000
 EQUAL = True # Population of each particle is equal
-locations = [] # [x, y, (r, g, b), x_force, y_force]
+locations = [] # [x, y, (r, g, b), x_vel, y_vel]
 
 if EQUAL:
     for n in range(POPULATION//5):
@@ -39,28 +42,32 @@ else:
         locations.append([random.randint(0, WIDTH), random.randint(0, HEIGHT), random.choice([RED, YELLOW, GREEN, BLUE, PURPLE]), random.randint(0, MAX_SPEED), random.randint(0, MAX_SPEED)])
 
 RANDOM_FORCE = False # Provide a random force
-force_matrix = [[], [], [], [], []]
+V_max_matrix = [[], [], [], [], []]
 if RANDOM_FORCE:
     for i in range(5):
         for n in range(5):
-            force_matrix[i].append(round(random.unform(-1, 1), 2)) # Generate random weight between -1 and 1 (2 decimal places)
+            V_max_matrix[i].append(round(random.uniform(-1, 1), 2)) # Generate random weight between -1 and 1 (2 decimal places)
+    V_max_matrix = np.dot(V_max_matrix, [MAX_SPEED])
 else:
-    force_matrix = [[1*MAX_SPEED], [0.6*MAX_SPEED], [0.2*MAX_SPEED], [-0.4*MAX_SPEED], [-1*MAX_SPEED], 
+    V_max_matrix = [[1*MAX_SPEED], [0.6*MAX_SPEED], [0.2*MAX_SPEED], [-0.4*MAX_SPEED], [-1*MAX_SPEED], 
                     [-0.6*MAX_SPEED], [-1*MAX_SPEED], [0.2*MAX_SPEED], [-0.4*MAX_SPEED], [-0.3*MAX_SPEED], 
                     [1*MAX_SPEED], [0.6*MAX_SPEED], [0.3*MAX_SPEED], [-0.4*MAX_SPEED], [0.8*MAX_SPEED], 
                     [0*MAX_SPEED], [0.4*MAX_SPEED], [0.7*MAX_SPEED], [0*MAX_SPEED], [-0.7*MAX_SPEED], 
                     [0.2*MAX_SPEED], [-0.2*MAX_SPEED], [0.6*MAX_SPEED], [-0.4*MAX_SPEED], [-0.1*MAX_SPEED]]
 
-
 #--------------------------------------------------------------------------------------------------------------
 
 def calculate_distance(x1, y1, x2, y2):
-    abs(np.sqrt((x1-x2)^2+(y1-y2)^2)) # Pythag
+    return abs(float((np.sqrt((x1-x2)**2+(y1-y2)**2)))) # Pythag
 
-def force_equation(range, min, max):
-    pass
+def force_equation(range, max):
+    global V_max_matrix, MAX_SPEED
 
-def calculate_force(colour1, x_force1, y_force1, colour2, x_force2, y_force2, distance):
+    force_equation_matrix = []
+
+
+    
+def calculate_force(colour1, x_vel1, y_vel1, colour2, x_vel2, y_vel2, distance):
     pass
 
 #--------------------------------------------------------------------------------------------------------------
@@ -79,8 +86,8 @@ def update(dt):
     window.clear()
 
     # Find dots within range
-    for [x1, y1, colour1, x_force1, y_force1] in locations:
-        for [x2, y2, colour2, x_force1, y_force1] in locations:
+    for [x1, y1, colour1, x_vel1, y_vel1] in locations:
+        for [x2, y2, colour2, x_vel1, y_vel1] in locations:
             if [x1, y1] == [x2, y2]: # Stop it from comparing itself
                 pass
             else:
